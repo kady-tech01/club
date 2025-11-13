@@ -1,0 +1,1553 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MoQawill - Business Club</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="/_sdk/element_sdk.js"></script>
+  <style>
+        /* ===================================
+           GLOBAL STYLES & RESET
+           =================================== */
+        
+        /* Base body styling - sets default font and background */
+        body {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #c1e8ff; /* Light blue background */
+            overflow-x: hidden; /* Prevent horizontal scrolling */
+        }
+
+        /* Ensure full height for proper layout */
+        html, body {
+            height: 100%;
+        }
+
+        /* Apply box-sizing to all elements for consistent sizing */
+        * {
+            box-sizing: border-box;
+        }
+
+        /* ===================================
+           COLOR PALETTE
+           Define all colors used throughout the site
+           =================================== */
+        :root {
+            --primary-light: #c1e8ff;    /* Light blue - backgrounds */
+            --primary-medium: #7da0ca;   /* Medium blue - accents */
+            --primary-dark: #052659;     /* Dark blue - text/headers */
+            --primary-darkest: #021024;  /* Darkest blue - sidebar */
+        }
+
+        /* ===================================
+           SIDEBAR TOGGLE BUTTON
+           Floating button to show/hide sidebar
+           =================================== */
+        .sidebar-toggle {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            width: 35px;
+            height: 35px;
+            background: rgba(125, 160, 202, 0.3);
+            border: none;
+            border-radius: 8px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            cursor: pointer;
+            z-index: 1001;         /* Above sidebar */
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .sidebar-toggle:hover {
+            background: rgba(125, 160, 202, 0.5);
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 3px 12px rgba(125, 160, 202, 0.2);
+        }
+
+        .sidebar-toggle i {
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-toggle:hover i {
+            transform: rotate(90deg);
+        }
+
+        /* When sidebar is hidden, move toggle button to show it's clickable */
+        .sidebar-hidden .sidebar-toggle {
+            background: rgba(193, 232, 255, 0.4);
+            color: var(--primary-dark);
+            animation: togglePulse 2s ease-in-out infinite;
+        }
+
+        @keyframes togglePulse {
+            0%, 100% {
+                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+            }
+            50% {
+                box-shadow: 0 6px 24px rgba(125, 160, 202, 0.6);
+            }
+        }
+
+        /* ===================================
+           SIDEBAR NAVIGATION
+           Fixed left sidebar with logo and page links
+           =================================== */
+        .sidebar {
+            position: fixed;        /* Stay in place when scrolling */
+            left: 0;
+            top: 0;
+            width: 280px;          /* Fixed width sidebar */
+            height: 100%;          /* Full viewport height */
+            background: linear-gradient(135deg, var(--primary-darkest) 0%, var(--primary-dark) 100%);
+            padding: 2rem 1.5rem;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3); /* Right shadow for depth */
+            border-right: 3px solid var(--primary-medium);
+            overflow-y: auto;      /* Allow scrolling if content is too tall */
+            z-index: 1000;         /* Ensure sidebar stays on top */
+            transition: transform 0.3s ease; /* Smooth slide animation */
+        }
+
+        /* Hidden sidebar state - slides out to the left */
+        .sidebar-hidden .sidebar {
+            transform: translateX(-100%);
+        }
+
+        /* Top section of sidebar - contains logo and club name */
+        .sidebar-top {
+            display: flex;
+            flex-direction: column;  /* Stack logo and name vertically */
+            align-items: center;     /* Center horizontally */
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 2px solid var(--primary-medium); /* Separator line */
+        }
+
+        /* Logo placeholder box - displays "LOGO" text */
+        .logo-placeholder {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-medium) 100%);
+            border-radius: 15px;     /* Rounded corners */
+            display: flex;
+            align-items: center;     /* Center text vertically */
+            justify-content: center; /* Center text horizontally */
+            font-weight: bold;
+            color: var(--primary-darkest);
+            font-size: 1.3rem;
+            border: 3px solid var(--primary-medium);
+            box-shadow: 0 6px 16px rgba(193, 232, 255, 0.4);
+            transition: all 0.3s ease;
+            animation: logoPulse 2s ease-in-out infinite; /* Pulsing glow effect */
+            position: relative;
+        }
+
+        /* Animation: Logo pulsing glow effect */
+        @keyframes logoPulse {
+            0%, 100% {
+                box-shadow: 0 6px 16px rgba(193, 232, 255, 0.4); /* Normal glow */
+            }
+            50% {
+                box-shadow: 0 6px 24px rgba(193, 232, 255, 0.7); /* Brighter glow */
+            }
+        }
+
+        /* Logo hover effect - slight rotation and scale */
+        .logo-placeholder:hover {
+            transform: scale(1.05) rotate(5deg); /* Grow and tilt slightly */
+            box-shadow: 0 8px 20px rgba(193, 232, 255, 0.6);
+            animation: none; /* Stop pulsing on hover */
+        }
+
+        /* Club name styling - "MoQawill" text */
+        .club-name {
+            color: white;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0;
+            letter-spacing: 1px;      /* Space out letters slightly */
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5); /* Text shadow for depth */
+            text-align: center;
+        }
+
+        /* Container for all navigation links */
+        .page-links {
+            display: flex;
+            flex-direction: column; /* Stack links vertically */
+            gap: 0.5rem;           /* Space between links */
+            width: 100%;
+        }
+
+        /* Individual navigation link styling */
+        .page-link {
+            color: var(--primary-light);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease; /* Smooth transitions for all changes */
+            padding: 0.9rem 1.2rem;
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;          /* Hide the sliding indicator when not visible */
+            letter-spacing: 0.3px;
+            background: rgba(255, 255, 255, 0.05); /* Subtle background */
+            border: 2px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;              /* Space between icon and text */
+        }
+
+        /* Icon styling with gradient color effect */
+        .page-link i {
+            font-size: 1.1rem;
+            background: linear-gradient(135deg, var(--primary-light) 0%, #a8d5f2 50%, var(--primary-medium) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            transition: all 0.3s ease;
+            min-width: 20px;          /* Ensure consistent icon width */
+        }
+
+        /* Left border indicator that appears on hover/active */
+        .page-link::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 0;                  /* Hidden by default */
+            height: 60%;
+            background: var(--primary-light);
+            transition: all 0.3s ease;
+            transform: translateY(-50%); /* Center vertically */
+            opacity: 0.2;
+        }
+
+        /* Show left border on hover */
+        .page-link:hover::before {
+            width: 4px; /* Expand to visible width */
+        }
+
+        /* Hover effect - brighten and slide right */
+        .page-link:hover {
+            color: white;
+            background: rgba(125, 160, 202, 0.3);
+            transform: translateX(5px); /* Slide right slightly */
+            border-color: var(--primary-medium);
+        }
+
+        /* Enhance icon gradient on hover */
+        .page-link:hover i {
+            background: linear-gradient(135deg, #ffffff 0%, var(--primary-light) 50%, #a8d5f2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            transform: scale(1.1);
+        }
+
+        /* Active page link styling - shows current page */
+        .page-link.active {
+            background: linear-gradient(135deg, var(--primary-medium) 0%, var(--primary-dark) 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(125, 160, 202, 0.5);
+            border-color: var(--primary-light);
+        }
+
+        /* Active link icon with bright gradient */
+        .page-link.active i {
+            background: linear-gradient(135deg, #ffffff 0%, var(--primary-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Active link always shows left border */
+        .page-link.active::before {
+            width: 4px;
+            opacity: 1;
+        }
+
+        /* ===================================
+           MAIN CONTENT AREA
+           Content area to the right of sidebar
+           =================================== */
+        .main-content {
+            margin-left: 280px;              /* Offset by sidebar width */
+            padding: 2rem;
+            min-height: 100%;
+            max-width: calc(100% - 280px);   /* Prevent overlap with sidebar */
+            transition: all 0.3s ease;       /* Smooth transition when sidebar toggles */
+        }
+
+        /* When sidebar is hidden, expand main content to full width */
+        .sidebar-hidden .main-content {
+            margin-left: 0;
+            max-width: 100%;
+        }
+
+        /* ===================================
+           HERO SECTION
+           Large banner at top of each page
+           =================================== */
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
+            padding: 4rem 2rem;
+            border-radius: 20px;
+            text-align: center;
+            color: white;
+            margin-bottom: 3rem;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;                /* Hide rotating background effect overflow */
+            animation: heroFloat 3s ease-in-out infinite; /* Floating animation */
+        }
+
+        /* Rotating background effect behind hero content */
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(193, 232, 255, 0.1) 0%, transparent 70%);
+            animation: heroRotate 20s linear infinite; /* Slow continuous rotation */
+        }
+
+        /* Animation: Hero section floating up and down */
+        @keyframes heroFloat {
+            0%, 100% {
+                transform: translateY(0px);    /* Starting position */
+            }
+            50% {
+                transform: translateY(-10px);  /* Float up 10px */
+            }
+        }
+
+        /* Animation: Background rotating continuously */
+        @keyframes heroRotate {
+            from {
+                transform: rotate(0deg);   /* Start */
+            }
+            to {
+                transform: rotate(360deg); /* Full rotation */
+            }
+        }
+
+        /* Hero title styling - main heading */
+        .hero-section h1 {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;                        /* Appear above rotating background */
+            animation: titleSlideIn 0.8s ease-out; /* Slide in from top */
+        }
+
+        @keyframes titleSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-section p {
+            font-size: 1.3rem;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+            animation: subtitleSlideIn 0.8s ease-out 0.2s backwards;
+        }
+
+        @keyframes subtitleSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 0.95;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===================================
+           CONTENT CARDS
+           White cards containing page content
+           =================================== */
+        .content-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+            animation: cardFadeIn 0.6s ease-out backwards; /* Fade in on page load */
+            position: relative;
+        }
+
+        /* Stagger animation delays for sequential card appearance */
+        .content-card:nth-child(1) { animation-delay: 0.1s; }
+        .content-card:nth-child(2) { animation-delay: 0.2s; }
+        .content-card:nth-child(3) { animation-delay: 0.3s; }
+        .content-card:nth-child(4) { animation-delay: 0.4s; }
+        .content-card:nth-child(5) { animation-delay: 0.5s; }
+
+        @keyframes cardFadeIn {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .content-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background: linear-gradient(180deg, var(--primary-medium) 0%, var(--primary-dark) 100%);
+            border-radius: 15px 0 0 15px;
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .content-card:hover::before {
+            transform: scaleY(1);
+        }
+
+        .content-card:hover {
+            transform: translateY(-5px) translateX(5px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .content-card h2 {
+            color: var(--primary-dark);
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 3px solid var(--primary-medium);
+        }
+
+        .content-card p {
+            color: #555;
+            line-height: 1.8;
+            font-size: 1.05rem;
+        }
+
+        /* ===================================
+           FEATURE GRID
+           Responsive grid for feature items
+           =================================== */
+        .feature-grid {
+            display: grid;
+            /* Auto-fit columns: minimum 280px, expand to fill space equally */
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;              /* Space between grid items */
+            margin-top: 2rem;
+        }
+
+        /* Individual feature item card */
+        .feature-item {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;     /* Center all content */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;       /* Hide shine effect overflow */
+        }
+
+        .feature-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(193, 232, 255, 0.3), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .feature-item:hover::before {
+            left: 100%;
+        }
+
+        .feature-item:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 12px 32px rgba(125, 160, 202, 0.3);
+            border: 2px solid var(--primary-light);
+        }
+
+        .feature-item i {
+            font-size: 3rem;
+            color: var(--primary-medium);
+            margin-bottom: 1rem;
+            transition: all 0.4s ease;
+        }
+
+        .feature-item:hover i {
+            transform: rotateY(360deg) scale(1.1);
+            color: var(--primary-dark);
+        }
+
+        .feature-item h3 {
+            color: var(--primary-dark);
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .feature-item p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* ===================================
+           FOOTER
+           Bottom section with contact info and links
+           =================================== */
+        footer {
+            background: linear-gradient(135deg, var(--primary-darkest) 0%, var(--primary-dark) 100%);
+            color: var(--primary-light);
+            padding: 2rem 2rem 1rem;
+            margin-top: 3rem;
+            margin-left: 280px;              /* Align with main content */
+            max-width: calc(100% - 280px);   /* Match main content width */
+            transition: all 0.3s ease;       /* Smooth transition when sidebar toggles */
+        }
+
+        /* When sidebar is hidden, expand footer to full width */
+        .sidebar-hidden footer {
+            margin-left: 0;
+            max-width: 100%;
+        }
+
+        /* Container for footer sections */
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Individual footer section (About, Links, Social) */
+        .footer-section {
+            text-align: center;
+        }
+
+        .footer-section h4 {
+            color: white;
+            font-weight: bold;
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+        }
+        
+        .footer-section p {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-section ul {
+            margin-bottom: 0;
+            padding-left: 0;
+        }
+        
+        .footer-section ul li {
+            margin-bottom: 0.4rem;
+            list-style: none;
+        }
+        
+        .footer-section ul li a {
+            font-size: 0.9rem;
+        }
+
+        /* Container for social media icons - centered row */
+        .social-links {
+            display: flex;
+            gap: 1rem;                    /* Space between icons */
+            flex-wrap: wrap;              /* Wrap to next line on small screens */
+            justify-content: center;      /* Center icons horizontally */
+        }
+
+        /* Individual social media icon button */
+        .social-links a {
+            display: inline-flex;
+            align-items: center;          /* Center icon vertically */
+            justify-content: center;      /* Center icon horizontally */
+            width: 40px;                  /* Fixed width */
+            height: 40px;                 /* Fixed height (makes it square) */
+            background: var(--primary-medium);  /* Medium blue background */
+            color: white;                 /* White icon color */
+            border-radius: 50%;           /* Make it circular */
+            text-decoration: none;        /* Remove underline */
+            transition: all 0.3s ease;    /* Smooth transitions */
+            font-size: 1.1rem;            /* Icon size */
+            position: relative;           /* For positioning the ring effect */
+        }
+
+        /* Expanding ring effect that appears on hover */
+        .social-links a::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;                      /* Circular ring */
+            border: 2px solid var(--primary-light);  /* Light blue ring */
+            opacity: 0;                              /* Hidden by default */
+            transform: scale(0.8);                   /* Start smaller */
+            transition: all 0.3s ease;
+        }
+
+        /* Hover effect - change colors, lift up, and bounce */
+        .social-links a:hover {
+            background: var(--primary-light);        /* Light blue background */
+            color: var(--primary-dark);              /* Dark blue icon */
+            transform: translateY(-5px) scale(1.1);  /* Move up and grow */
+            animation: socialBounce 0.6s ease;       /* Bouncing animation */
+        }
+
+        /* Show and expand the ring on hover */
+        .social-links a:hover::after {
+            opacity: 1;                              /* Make ring visible */
+            transform: scale(1.3);                   /* Expand ring outward */
+        }
+
+        /* Animation: Bouncing effect for social icons */
+        @keyframes socialBounce {
+            0%, 100% {
+                transform: translateY(-5px) scale(1.1);   /* Normal hover state */
+            }
+            50% {
+                transform: translateY(-8px) scale(1.15);  /* Bounce higher */
+            }
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 1.5rem;
+            border-top: 2px solid var(--primary-medium);
+            color: var(--primary-light);
+        }
+        
+        .footer-bottom p {
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .developer-credit {
+            margin-top: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .developer-credit a {
+            color: var(--primary-light);
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        .developer-credit a:hover {
+            color: white;
+        }
+
+        /* ===================================
+           PAGE CONTENT SECTIONS
+           Controls visibility and animation of different pages
+           =================================== */
+        
+        /* Hide all page content by default */
+        .page-content {
+            display: none;
+        }
+
+        /* Show active page with fade-in animation */
+        .page-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;  /* Smooth fade and slide in */
+        }
+
+        /* Animation: Fade in and slide up when page becomes active */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;                    /* Start invisible */
+                transform: translateY(20px);   /* Start 20px below */
+            }
+            to {
+                opacity: 1;                    /* End fully visible */
+                transform: translateY(0);      /* End at normal position */
+            }
+        }
+
+        /* ===================================
+           RESPONSIVE DESIGN
+           Adjustments for different screen sizes
+           =================================== */
+        
+        /* Tablet and smaller laptops (992px and below) */
+        @media (max-width: 992px) {
+            /* Reduce hero title size for medium screens */
+            .hero-section h1 {
+                font-size: 2rem;
+            }
+        }
+
+        /* Tablets (768px and below) */
+        @media (max-width: 768px) {
+            /* Narrow sidebar to save space */
+            .sidebar {
+                width: 200px;
+            }
+
+            /* Reduce club name size */
+            .club-name {
+                font-size: 1.4rem;
+            }
+
+            /* Smaller logo */
+            .logo-placeholder {
+                width: 55px;
+                height: 55px;
+                font-size: 1.1rem;
+            }
+
+            /* Stack feature grid items vertically */
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+            /* Smaller navigation links */
+            .page-link {
+                font-size: 0.85rem;
+                padding: 0.7rem 0.8rem;
+            }
+
+            /* Adjust main content for narrower sidebar */
+            .main-content {
+                margin-left: 200px;
+                max-width: calc(100% - 200px);
+                padding: 1.5rem;
+            }
+            
+            /* Adjust footer for narrower sidebar */
+            footer {
+                padding: 1.5rem 1.5rem 0.8rem;
+                margin-left: 200px;
+                max-width: calc(100% - 200px);
+            }
+        }
+
+        /* Mobile phones (576px and below) */
+        @media (max-width: 576px) {
+            /* Even narrower sidebar for mobile */
+            .sidebar {
+                width: 160px;
+                padding: 1.5rem 1rem;
+            }
+
+            /* Smaller club name for mobile */
+            .club-name {
+                font-size: 1.1rem;
+            }
+
+            /* Smallest logo size */
+            .logo-placeholder {
+                width: 45px;
+                height: 45px;
+                font-size: 0.9rem;
+            }
+
+            /* Compact navigation links */
+            .page-link {
+                font-size: 0.75rem;
+                padding: 0.6rem 0.7rem;
+                gap: 0.5rem;
+            }
+
+            /* Smaller icons on mobile */
+            .page-link i {
+                font-size: 0.95rem;
+            }
+
+            /* Adjust main content for mobile sidebar */
+            .main-content {
+                margin-left: 160px;
+                max-width: calc(100% - 160px);
+                padding: 1rem;
+            }
+
+            /* Tighter spacing in sidebar top section */
+            .sidebar-top {
+                gap: 0.7rem;
+                margin-bottom: 1.5rem;
+                padding-bottom: 1.5rem;
+            }
+            
+            /* Compact footer for mobile */
+            footer {
+                padding: 1.2rem 1rem 0.6rem;
+                margin-left: 160px;
+                max-width: calc(100% - 160px);
+            }
+            
+            /* Reduce gap between footer sections */
+            .footer-content {
+                gap: 1rem;
+            }
+        }
+
+        /* ===================================
+           TECH STACK SECTION
+           Technology badges on About page
+           =================================== */
+        
+        /* Container for technology badges - wraps to multiple lines */
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;              /* Allow badges to wrap to next line */
+            gap: 1rem;                    /* Space between badges */
+            margin-top: 1.5rem;
+        }
+
+        /* Individual technology badge (HTML, CSS, JavaScript, etc.) */
+        .tech-badge {
+            background: var(--primary-light);        /* Light blue background */
+            color: var(--primary-dark);              /* Dark blue text */
+            padding: 0.6rem 1.2rem;                  /* Padding inside badge */
+            border-radius: 25px;                     /* Fully rounded pill shape */
+            font-weight: 600;                        /* Bold text */
+            font-size: 0.95rem;
+            border: 2px solid var(--primary-medium); /* Medium blue border */
+        }
+
+        /* ===================================
+           FORM STYLES
+           Feedback form input and button styling
+           =================================== */
+        
+        /* Focus state for all form inputs - highlights when user clicks in field */
+        #feedbackForm input:focus,
+        #feedbackForm select:focus,
+        #feedbackForm textarea:focus {
+            outline: none;                                      /* Remove default browser outline */
+            border-color: var(--primary-dark);                 /* Change border to dark blue */
+            box-shadow: 0 0 0 3px rgba(125, 160, 202, 0.2);   /* Add soft blue glow around field */
+        }
+
+        /* Submit button hover effect - lifts button up */
+        #feedbackForm button:hover {
+            transform: translateY(-2px);                       /* Move button up 2px */
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);        /* Increase shadow for depth */
+        }
+
+        /* Submit button active state - pressed down effect */
+        #feedbackForm button:active {
+            transform: translateY(0);                          /* Return to original position */
+        }
+
+        /* ===================================
+           ANIMATED BACKGROUND SHAPES
+           Floating geometric shapes in background
+           =================================== */
+        .background-shapes {
+            position: fixed;        /* Stay in place while page scrolls */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;       /* Hide shapes that move outside viewport */
+            z-index: -1;           /* Behind all content */
+            pointer-events: none;  /* Don't block clicks on content */
+        }
+
+        /* Base styling for all shapes */
+        .shape {
+            position: absolute;
+            opacity: 0.15;         /* Semi-transparent */
+            filter: blur(1px);     /* Slight blur for softer look */
+        }
+
+        /* Circle shape - top left area */
+        .shape-circle {
+            width: 150px;
+            height: 150px;
+            background: linear-gradient(135deg, var(--primary-medium), var(--primary-dark));
+            border-radius: 50%;  /* Makes it circular */
+            top: 10%;
+            left: 15%;
+            animation: float1 20s ease-in-out infinite; /* Floating animation */
+        }
+
+        /* Square shape - bottom right area, rotated 45 degrees */
+        .shape-square {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-medium));
+            border-radius: 20px;
+            top: 60%;
+            left: 70%;
+            animation: float2 25s ease-in-out infinite;
+            transform: rotate(45deg); /* Diamond orientation */
+        }
+
+        /* Triangle shape - bottom left area */
+        .shape-triangle {
+            width: 0;
+            height: 0;
+            /* CSS triangle technique using borders */
+            border-left: 75px solid transparent;
+            border-right: 75px solid transparent;
+            border-bottom: 130px solid var(--primary-medium);
+            top: 80%;
+            left: 20%;
+            animation: float3 18s ease-in-out infinite;
+        }
+
+        .shape-circle-2 {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, var(--primary-light), var(--primary-medium));
+            border-radius: 50%;
+            top: 30%;
+            left: 80%;
+            animation: float4 22s ease-in-out infinite;
+        }
+
+        .shape-hexagon {
+            width: 100px;
+            height: 57.74px;
+            background: var(--primary-dark);
+            position: relative;
+            top: 50%;
+            left: 40%;
+            animation: float5 28s ease-in-out infinite;
+        }
+
+        .shape-hexagon::before {
+            content: "";
+            position: absolute;
+            top: -28.87px;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 50px solid transparent;
+            border-right: 50px solid transparent;
+            border-bottom: 28.87px solid var(--primary-dark);
+        }
+
+        .shape-hexagon::after {
+            content: "";
+            position: absolute;
+            bottom: -28.87px;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 50px solid transparent;
+            border-right: 50px solid transparent;
+            border-top: 28.87px solid var(--primary-dark);
+        }
+
+        .shape-diamond {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--primary-medium), var(--primary-light));
+            top: 15%;
+            left: 50%;
+            animation: float6 24s ease-in-out infinite;
+            transform: rotate(45deg);
+            border-radius: 10px;
+        }
+
+        /* Animation: Circle floating and rotating */
+        @keyframes float1 {
+            0%, 100% {
+                transform: translate(0, 0) rotate(0deg);           /* Start/end position */
+            }
+            25% {
+                transform: translate(100px, -50px) rotate(90deg);  /* Move right and up */
+            }
+            50% {
+                transform: translate(200px, 50px) rotate(180deg);  /* Move right and down */
+            }
+            75% {
+                transform: translate(100px, 100px) rotate(270deg); /* Move back left */
+            }
+        }
+
+        /* Animation: Square floating diagonally */
+        @keyframes float2 {
+            0%, 100% {
+                transform: translate(0, 0) rotate(45deg);            /* Start/end at 45° */
+            }
+            33% {
+                transform: translate(-150px, 100px) rotate(135deg);  /* Move left and down */
+            }
+            66% {
+                transform: translate(-50px, -80px) rotate(225deg);   /* Move up */
+            }
+        }
+
+        /* Animation: Triangle floating and flipping */
+        @keyframes float3 {
+            0%, 100% {
+                transform: translate(0, 0) rotate(0deg);             /* Start/end */
+            }
+            50% {
+                transform: translate(150px, -100px) rotate(180deg);  /* Move and flip */
+            }
+        }
+
+        @keyframes float4 {
+            0%, 100% {
+                transform: translate(0, 0) scale(1);
+            }
+            25% {
+                transform: translate(-100px, 80px) scale(1.2);
+            }
+            50% {
+                transform: translate(-200px, -50px) scale(0.8);
+            }
+            75% {
+                transform: translate(-100px, -100px) scale(1.1);
+            }
+        }
+
+        @keyframes float5 {
+            0%, 100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            20% {
+                transform: translate(80px, -60px) rotate(60deg);
+            }
+            40% {
+                transform: translate(150px, 40px) rotate(120deg);
+            }
+            60% {
+                transform: translate(100px, 120px) rotate(180deg);
+            }
+            80% {
+                transform: translate(-50px, 80px) rotate(240deg);
+            }
+        }
+
+        @keyframes float6 {
+            0%, 100% {
+                transform: translate(0, 0) rotate(45deg) scale(1);
+            }
+            33% {
+                transform: translate(120px, 100px) rotate(135deg) scale(1.3);
+            }
+            66% {
+                transform: translate(-80px, 50px) rotate(225deg) scale(0.9);
+            }
+        }
+
+        /* Responsive adjustments for background shapes on tablets and mobile */
+        @media (max-width: 768px) {
+            /* Make shapes more subtle on smaller screens */
+            .shape {
+                opacity: 0.1;  /* Reduce opacity so they don't distract from content */
+            }
+            
+            /* Smaller circles for mobile */
+            .shape-circle,
+            .shape-circle-2 {
+                width: 100px;
+                height: 100px;
+            }
+            
+            /* Smaller squares and diamonds for mobile */
+            .shape-square,
+            .shape-diamond {
+                width: 80px;
+                height: 80px;
+            }
+            
+            /* Smaller hexagon for mobile */
+            .shape-hexagon {
+                width: 70px;
+                height: 40.42px;  /* Maintains hexagon proportions */
+            }
+        }
+    </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
+ </head>
+ <body><!-- Sidebar Toggle Button --> <button class="sidebar-toggle" id="sidebarToggle" title="Toggle Sidebar"> <i class="fas fa-bars"></i> </button> <!-- Sidebar Navigation -->
+  <aside class="sidebar" id="sidebar">
+   <div class="sidebar-top">
+    <div class="logo-placeholder">
+     LOGO
+    </div>
+    <h1 class="club-name" id="clubName">MoQawill</h1>
+   </div>
+   <nav class="page-links"><a href="#" class="page-link active" data-page="home"> <i class="fas fa-home"></i> <span>Home</span> </a> <a href="#" class="page-link" data-page="about"> <i class="fas fa-info-circle"></i> <span>About</span> </a> <a href="#" class="page-link" data-page="announces"> <i class="fas fa-bullhorn"></i> <span>Announces</span> </a> <a href="#" class="page-link" data-page="achievements"> <i class="fas fa-trophy"></i> <span>Achievements</span> </a> <a href="#" class="page-link" data-page="activities"> <i class="fas fa-running"></i> <span>Activities</span> </a> <a href="#" class="page-link" data-page="news"> <i class="fas fa-newspaper"></i> <span>News</span> </a> <a href="#" class="page-link" data-page="events"> <i class="fas fa-calendar-alt"></i> <span>Events</span> </a> <a href="#" class="page-link" data-page="departments"> <i class="fas fa-sitemap"></i> <span>Departments</span> </a> <a href="#" class="page-link" data-page="sponsors"> <i class="fas fa-handshake"></i> <span>Sponsors</span> </a> <a href="#" class="page-link" data-page="esm"> <i class="fas fa-star"></i> <span>ESM</span> </a> <a href="#" class="page-link" data-page="feedback"> <i class="fas fa-comment-dots"></i> <span>Feedback</span> </a>
+   </nav>
+  </aside><!-- Main Content -->
+  <main class="main-content"><!-- Home Page -->
+   <div class="page-content active" id="home">
+    <div class="hero-section">
+     <h1 id="heroTitle">Welcome to MoQawill</h1>
+     <p id="heroSubtitle">Business Club of Excellence</p>
+    </div>
+    <div class="content-card">
+     <h2>About Our Club</h2>
+     <p>MoQawill is the premier business club at our university, dedicated to fostering entrepreneurship, leadership, and professional development among students. We provide a platform for aspiring business leaders to connect, learn, and grow together.</p>
+    </div>
+    <div class="feature-grid">
+     <div class="feature-item"><i class="fas fa-users"></i>
+      <h3>Community</h3>
+      <p>Join a vibrant community of business enthusiasts and future entrepreneurs</p>
+     </div>
+     <div class="feature-item"><i class="fas fa-lightbulb"></i>
+      <h3>Innovation</h3>
+      <p>Explore innovative ideas and turn them into successful business ventures</p>
+     </div>
+     <div class="feature-item"><i class="fas fa-chart-line"></i>
+      <h3>Growth</h3>
+      <p>Develop your skills through workshops, seminars, and networking events</p>
+     </div>
+    </div>
+   </div><!-- About Page -->
+   <div class="page-content" id="about">
+    <div class="hero-section">
+     <h1>About MoQawill</h1>
+     <p>Empowering Future Business Leaders</p>
+    </div>
+    <div class="content-card">
+     <h2>Our Mission</h2>
+     <p>MoQawill is committed to creating a dynamic environment where students can develop their business acumen, leadership skills, and entrepreneurial mindset. We believe in the power of collaboration and innovation to shape the future of business.</p>
+    </div>
+    <div class="content-card">
+     <h2>Our Vision</h2>
+     <p>To be the leading business club that inspires and equips students with the knowledge, skills, and network necessary to excel in the global business landscape.</p>
+    </div>
+    <div class="content-card">
+     <h2>Technology Stack</h2>
+     <p>Our club utilizes modern technologies to deliver exceptional experiences:</p>
+     <div class="tech-stack"><span class="tech-badge">HTML</span> <span class="tech-badge">CSS</span> <span class="tech-badge">JavaScript</span> <span class="tech-badge">Bootstrap</span> <span class="tech-badge">React.js</span> <span class="tech-badge">Python</span> <span class="tech-badge">Django</span> <span class="tech-badge">MySQL</span> <span class="tech-badge">DRF</span>
+     </div>
+    </div>
+   </div><!-- Departments Page -->
+   <div class="page-content" id="departments">
+    <div class="hero-section">
+     <h1>Our Departments</h1>
+     <p>Specialized Teams Working Together</p>
+    </div>
+    <div class="feature-grid">
+     <div class="feature-item"><i class="fas fa-bullseye"></i>
+      <h3>Marketing</h3>
+      <p>Promoting our events and building our brand presence</p>
+     </div>
+     <div class="feature-item"><i class="fas fa-handshake"></i>
+      <h3>Partnerships</h3>
+      <h3>Finance</h3>
+      <p>Managing club finances and budgeting</p>
+     </div>
+     <div class="feature-item"><i class="fas fa-pen-fancy"></i>
+      <h3>Content</h3>
+      <p>Creating engaging content for our community</p>
+     </div>
+    </div>
+   </div><!-- Sponsors Page -->
+   <div class="page-content" id="sponsors">
+    <div class="hero-section">
+     <h1>Our Sponsors</h1>
+     <p>Partners in Excellence</p>
+    </div>
+    <div class="content-card">
+     <h2>Thank You to Our Sponsors</h2>
+     <p>We are grateful to our sponsors who support our mission and help us create valuable opportunities for our members. Their partnership enables us to organize impactful events and programs.</p>
+    </div>
+    <div class="content-card">
+     <h2>Become a Sponsor</h2>
+     <p>Interested in partnering with MoQawill? We offer various sponsorship opportunities that provide excellent visibility and engagement with talented business students. Contact us to learn more about how we can work together.</p>
+    </div>
+   </div><!-- Achievements Page -->
+   <div class="page-content" id="achievements">
+    <div class="hero-section">
+     <h1>Our Achievements</h1>
+     <p>Celebrating Success</p>
+    </div>
+    <div class="feature-grid">
+     <div class="feature-item"><i class="fas fa-award"></i>
+      <h3>Best Club Award</h3>
+      <p>Recognized as the best business club in the university</p>
+     </div>
+     <div class="feature-item"><i class="fas fa-users"></i>
+      <h3>500+ Members</h3>
+      <p>Growing community of passionate business students</p>
+     </div>
+     <div class="feature-item"><i class="fas fa-calendar"></i>
+      <h3>50+ Events</h3>
+      <p>Successfully organized workshops and seminars</p>
+     </div>
+     <div class="feature-item"><i class="fas fa-building"></i>
+      <h3>20+ Partners</h3>
+      <p>Strong network of corporate partnerships</p>
+     </div>
+    </div>
+   </div><!-- Activities Page -->
+   <div class="page-content" id="activities">
+    <div class="hero-section">
+     <h1>Our Activities</h1>
+     <p>Engaging Programs and Initiatives</p>
+    </div>
+    <div class="content-card">
+     <h2>Weekly Workshops</h2>
+     <p>Interactive sessions covering various business topics, from entrepreneurship to financial management, led by industry experts and successful entrepreneurs.</p>
+    </div>
+    <div class="content-card">
+     <h2>Networking Events</h2>
+     <p>Regular meetups connecting students with professionals, alumni, and potential mentors in the business world.</p>
+    </div>
+    <div class="content-card">
+     <h2>Business Competitions</h2>
+     <p>Exciting competitions where members can showcase their business ideas and compete for prizes and recognition.</p>
+    </div>
+    <div class="content-card">
+     <h2>Mentorship Program</h2>
+     <p>One-on-one mentorship opportunities with experienced business professionals to guide your career journey.</p>
+    </div>
+   </div><!-- News Page -->
+   <div class="page-content" id="news">
+    <div class="hero-section">
+     <h1>Latest News</h1>
+     <p>Stay Updated with MoQawill</p>
+    </div>
+    <div class="content-card">
+     <h2>New Partnership Announcement</h2>
+     <p><small class="text-muted">Posted 2 days ago</small></p>
+     <p>We are excited to announce our new partnership with leading companies in the region, bringing more opportunities for our members.</p>
+    </div>
+    <div class="content-card">
+     <h2>Successful Workshop Series</h2>
+     <p><small class="text-muted">Posted 1 week ago</small></p>
+     <p>Our recent workshop series on digital marketing was a huge success with over 200 participants learning valuable skills.</p>
+    </div>
+    <div class="content-card">
+     <h2>Member Spotlight</h2>
+     <p><small class="text-muted">Posted 2 weeks ago</small></p>
+     <p>Congratulations to our member who recently launched their startup after participating in our entrepreneurship program!</p>
+    </div>
+   </div><!-- Events Page -->
+   <div class="page-content" id="events">
+    <div class="hero-section">
+     <h1>Upcoming Events</h1>
+     <p>Join Us for Exciting Opportunities</p>
+    </div>
+    <div class="content-card">
+     <h2>Business Leadership Summit</h2>
+     <p><strong>Date:</strong> Next Month</p>
+     <p>A full-day conference featuring keynote speakers, panel discussions, and networking opportunities with industry leaders.</p>
+    </div>
+    <div class="content-card">
+     <h2>Startup Pitch Competition</h2>
+     <p><strong>Date:</strong> Coming Soon</p>
+     <p>Present your business idea to a panel of investors and compete for seed funding and mentorship opportunities.</p>
+    </div>
+    <div class="content-card">
+     <h2>Career Fair</h2>
+     <p><strong>Date:</strong> This Semester</p>
+     <p>Meet with recruiters from top companies looking to hire talented business students for internships and full-time positions.</p>
+    </div>
+   </div><!-- Announces Page -->
+   <div class="page-content" id="announces">
+    <div class="hero-section">
+     <h1>Announcements</h1>
+     <p>Important Updates</p>
+    </div>
+    <div class="content-card">
+     <h2>Membership Registration Open</h2>
+     <p>Registration for new members is now open! Join MoQawill and become part of our thriving business community.</p>
+    </div>
+    <div class="content-card">
+     <h2>Committee Applications</h2>
+     <p>We are looking for passionate students to join our organizing committees. Applications are open for all departments.</p>
+    </div>
+    <div class="content-card">
+     <h2>Workshop Schedule Released</h2>
+     <p>Check out our exciting lineup of workshops for this semester covering topics from finance to marketing strategy.</p>
+    </div>
+   </div><!-- ESM Page -->
+   <div class="page-content" id="esm">
+    <div class="hero-section">
+     <h1>ESM Program</h1>
+     <p>Excellence in Student Management</p>
+    </div>
+    <div class="content-card">
+     <h2>About ESM</h2>
+     <p>The ESM (Excellence in Student Management) program is designed to develop leadership and management skills among our members through hands-on experience and structured learning.</p>
+    </div>
+    <div class="content-card">
+     <h2>Program Benefits</h2>
+     <p>Participants gain practical experience in project management, team leadership, event organization, and strategic planning while contributing to the club's success.</p>
+    </div>
+    <div class="content-card">
+     <h2>How to Join</h2>
+     <p>The ESM program accepts applications at the beginning of each semester. Candidates go through a selection process that includes interviews and assessment activities.</p>
+    </div>
+   </div><!-- Feedback Page -->
+   <div class="page-content" id="feedback">
+    <div class="hero-section">
+     <h1>Share Your Thoughts</h1>
+     <p>We Value Your Feedback</p>
+    </div>
+    <div class="content-card">
+     <h2>Send Us Your Suggestions</h2>
+     <p>Your feedback helps us improve our club and website. Whether you have suggestions, questions, or just want to share your thoughts, we'd love to hear from you!</p>
+     <form id="feedbackForm" style="margin-top: 2rem;">
+      <div style="margin-bottom: 1.5rem;"><label for="visitorName" style="display: block; font-weight: 600; color: var(--primary-dark); margin-bottom: 0.5rem;">Your Name</label> <input type="text" id="visitorName" required style="width: 100%; padding: 0.8rem; border: 2px solid var(--primary-medium); border-radius: 8px; font-size: 1rem; transition: all 0.3s ease;">
+      </div>
+      <div style="margin-bottom: 1.5rem;"><label for="visitorEmail" style="display: block; font-weight: 600; color: var(--primary-dark); margin-bottom: 0.5rem;">Your Email</label> <input type="email" id="visitorEmail" required style="width: 100%; padding: 0.8rem; border: 2px solid var(--primary-medium); border-radius: 8px; font-size: 1rem; transition: all 0.3s ease;">
+      </div>
+      <div style="margin-bottom: 1.5rem;"><label for="feedbackType" style="display: block; font-weight: 600; color: var(--primary-dark); margin-bottom: 0.5rem;">Feedback Type</label> <select id="feedbackType" required style="width: 100%; padding: 0.8rem; border: 2px solid var(--primary-medium); border-radius: 8px; font-size: 1rem; transition: all 0.3s ease;"> <option value="">Select a type...</option> <option value="suggestion">Suggestion</option> <option value="question">Question</option> <option value="compliment">Compliment</option> <option value="concern">Concern</option> <option value="website">Website Feedback</option> </select>
+      </div>
+      <div style="margin-bottom: 1.5rem;"><label for="feedbackMessage" style="display: block; font-weight: 600; color: var(--primary-dark); margin-bottom: 0.5rem;">Your Message</label> <textarea id="feedbackMessage" required rows="6" style="width: 100%; padding: 0.8rem; border: 2px solid var(--primary-medium); border-radius: 8px; font-size: 1rem; resize: vertical; transition: all 0.3s ease;" placeholder="Share your thoughts with us..."></textarea>
+      </div><button type="submit" style="background: linear-gradient(135deg, var(--primary-medium) 0%, var(--primary-dark) 100%); color: white; padding: 1rem 2.5rem; border: none; border-radius: 10px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);"> <i class="fas fa-paper-plane" style="margin-right: 0.5rem;"></i>Send Feedback </button>
+     </form>
+     <div id="feedbackSuccess" style="display: none; margin-top: 2rem; padding: 1.5rem; background: #d4edda; border: 2px solid #28a745; border-radius: 10px; color: #155724;"><i class="fas fa-check-circle" style="margin-right: 0.5rem; font-size: 1.2rem;"></i> <strong>Thank you for your feedback!</strong> We appreciate you taking the time to share your thoughts with us.
+     </div>
+    </div>
+   </div>
+  </main><!-- Footer -->
+  <footer>
+   <div class="container-fluid">
+    <div class="footer-content">
+     <div class="footer-section">
+      <h4>MoQawill</h4>
+      <p>Empowering the next generation of business leaders through innovation, collaboration, and excellence.</p>
+     </div>
+     <div class="footer-section">
+      <h4>Quick Links</h4>
+      <ul class="list-unstyled">
+       <li><a href="#" class="text-decoration-none" style="color: var(--primary-light);">Home</a></li>
+       <li><a href="#" class="text-decoration-none" style="color: var(--primary-light);">About</a></li>
+       <li><a href="#" class="text-decoration-none" style="color: var(--primary-light);">Events</a></li>
+       <li><a href="#" class="text-decoration-none" style="color: var(--primary-light);">Contact</a></li>
+      </ul>
+     </div>
+     <div class="footer-section">
+      <h4>Connect With Us</h4>
+      <div class="social-links"><a href="https://instagram.com" target="_blank" rel="noopener noreferrer" title="Instagram"> <i class="fab fa-instagram"></i> </a> <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer" title="TikTok"> <i class="fab fa-tiktok"></i> </a> <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" title="Facebook"> <i class="fab fa-facebook-f"></i> </a> <a href="mailto:contact@moqawill.com" title="Email"> <i class="fas fa-envelope"></i> </a> <a href="tel:+1234567890" title="Phone"> <i class="fas fa-phone"></i> </a>
+      </div>
+     </div>
+    </div>
+    <div class="footer-bottom">
+     <p>© 2025 MoQawill Business Club. All rights reserved.</p>
+     <div class="developer-credit">
+      Developed by <a href="mailto:" id="developerContact">Khadidja Mechara</a> | <a href="mailto:" id="developerEmail">khadidja.mechara@example.com</a>
+     </div>
+    </div>
+   </div>
+  </footer><!-- Animated Background Shapes -->
+  <div class="background-shapes">
+   <div class="shape shape-circle"></div>
+   <div class="shape shape-square"></div>
+   <div class="shape shape-triangle"></div>
+   <div class="shape shape-circle-2"></div>
+   <div class="shape shape-hexagon"></div>
+   <div class="shape shape-diamond"></div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+        /* ===================================
+           CONFIGURATION MANAGEMENT
+           Handles editable text content via Canva SDK
+           =================================== */
+        
+        // Default configuration values for all editable text
+        const defaultConfig = {
+            club_name: 'MoQawill',
+            hero_title: 'Welcome to MoQawill',
+            hero_subtitle: 'Business Club of Excellence',
+            developer_name: 'Khadidja Mechara',
+            developer_contact: 'khadidja.mechara@example.com'
+        };
+
+        // Function called when configuration changes (user edits text in Canva)
+        async function onConfigChange(config) {
+            // Get values from config or fall back to defaults
+            const clubName = config.club_name || defaultConfig.club_name;
+            const heroTitle = config.hero_title || defaultConfig.hero_title;
+            const heroSubtitle = config.hero_subtitle || defaultConfig.hero_subtitle;
+            const developerName = config.developer_name || defaultConfig.developer_name;
+            const developerContact = config.developer_contact || defaultConfig.developer_contact;
+
+            // Update club name in sidebar
+            document.getElementById('clubName').textContent = clubName;
+            
+            // Update hero section text
+            document.getElementById('heroTitle').textContent = heroTitle;
+            document.getElementById('heroSubtitle').textContent = heroSubtitle;
+            
+            // Update developer name in footer
+            const devContactElement = document.getElementById('developerContact');
+            devContactElement.textContent = developerName;
+            devContactElement.href = `mailto:${developerContact}`;
+            
+            // Update developer email in footer
+            const devEmailElement = document.getElementById('developerEmail');
+            devEmailElement.textContent = developerContact;
+            devEmailElement.href = `mailto:${developerContact}`;
+        }
+
+        // Define capabilities (color/font editing) - none used in this design
+        function mapToCapabilities(config) {
+            return {
+                recolorables: [],      // No color editing
+                borderables: [],       // No border editing
+                fontEditable: undefined,  // No font editing
+                fontSizeable: undefined   // No font size editing
+            };
+        }
+
+        // Map config values to edit panel fields for Canva UI
+        function mapToEditPanelValues(config) {
+            return new Map([
+                ['club_name', config.club_name || defaultConfig.club_name],
+                ['hero_title', config.hero_title || defaultConfig.hero_title],
+                ['hero_subtitle', config.hero_subtitle || defaultConfig.hero_subtitle],
+                ['developer_name', config.developer_name || defaultConfig.developer_name],
+                ['developer_contact', config.developer_contact || defaultConfig.developer_contact]
+            ]);
+        }
+
+        // Initialize Canva Element SDK if available
+        if (window.elementSdk) {
+            window.elementSdk.init({
+                defaultConfig,           // Default values
+                onConfigChange,          // Update function
+                mapToCapabilities,       // Editing capabilities
+                mapToEditPanelValues     // Edit panel mapping
+            });
+        }
+
+        /* ===================================
+           SIDEBAR TOGGLE FUNCTIONALITY
+           Handle showing/hiding the sidebar
+           =================================== */
+        
+        // Initialize sidebar toggle functionality
+        function initSidebarToggle() {
+            const toggleButton = document.getElementById('sidebarToggle');
+            const body = document.body;
+            
+            if (toggleButton) {
+                toggleButton.addEventListener('click', function() {
+                    // Toggle the sidebar-hidden class on body
+                    body.classList.toggle('sidebar-hidden');
+                    
+                    // Update button icon based on sidebar state
+                    const icon = this.querySelector('i');
+                    if (body.classList.contains('sidebar-hidden')) {
+                        icon.className = 'fas fa-chevron-right'; // Show arrow pointing right when hidden
+                    } else {
+                        icon.className = 'fas fa-bars'; // Show hamburger menu when visible
+                    }
+                });
+            }
+        }
+
+        /* ===================================
+           PAGE NAVIGATION
+           Handle sidebar link clicks and page switching
+           =================================== */
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize sidebar toggle functionality
+            initSidebarToggle();
+            
+            // Get all navigation links and page content sections
+            const pageLinks = document.querySelectorAll('.page-link');
+            const pages = document.querySelectorAll('.page-content');
+
+            // Add click handler to each navigation link
+            pageLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault(); // Prevent default link behavior
+                    
+                    // Get the target page ID from data-page attribute
+                    const targetPage = this.getAttribute('data-page');
+
+                    // Remove active class from all navigation links
+                    pageLinks.forEach(l => l.classList.remove('active'));
+                    
+                    // Add active class to the clicked link
+                    this.classList.add('active');
+
+                    // Hide all page content sections
+                    pages.forEach(page => page.classList.remove('active'));
+
+                    // Show the target page content
+                    const targetElement = document.getElementById(targetPage);
+                    if (targetElement) {
+                        targetElement.classList.add('active');
+                    }
+
+                    // Scroll to top of page smoothly
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+            });
+
+            /* ===================================
+               FEEDBACK FORM HANDLING
+               Process form submission and show success message
+               =================================== */
+            
+            // Get the feedback form element
+            const feedbackForm = document.getElementById('feedbackForm');
+            if (feedbackForm) {
+                // Listen for form submission
+                feedbackForm.addEventListener('submit', function(e) {
+                    e.preventDefault();  // Prevent page reload on submit
+                    
+                    // Collect form data (could be sent to a server in production)
+                    const name = document.getElementById('visitorName').value;
+                    const email = document.getElementById('visitorEmail').value;
+                    const type = document.getElementById('feedbackType').value;
+                    const message = document.getElementById('feedbackMessage').value;
+
+                    // Show success message to user
+                    const successMessage = document.getElementById('feedbackSuccess');
+                    successMessage.style.display = 'block';
+                    
+                    // Clear all form fields
+                    feedbackForm.reset();
+                    
+                    // Smoothly scroll to show the success message
+                    successMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+                    // Automatically hide success message after 5 seconds
+                    setTimeout(() => {
+                        successMessage.style.display = 'none';
+                    }, 5000);
+                });
+            }
+        });
+    </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'99db7a45210bba84',t:'MTc2MzAwNzYzNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
